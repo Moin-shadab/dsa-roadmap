@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Page 2 — Live Visualizers & Q&A | Moin's Notebook</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Caveat+Brush&family=Patrick+Hand&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink-dark: #1a1208;
+  --ink-mid: #2d1f0a;
+  --ink-light: #4a3520;
+  --paper: #fdf9f0;
+  --paper-dark: #f5edd8;
+  --paper-lines: #e8dfc8;
+  --pencil-red: #d63031;
+  --pencil-blue: #0984e3;
+  --pencil-green: #00b894;
+  --pencil-orange: #e17055;
+  --pencil-purple: #6c5ce7;
+  --pencil-yellow: #fdcb6e;
+  --pencil-pink: #fd79a8;
+  --pencil-teal: #00cec9;
+  --pencil-brown: #a0522d;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body {
+  font-family: 'Kalam', cursive;
+  background-color: var(--paper);
+  color: var(--ink-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background-image:repeating-linear-gradient(transparent,transparent 31px,var(--paper-lines) 31px,var(--paper-lines) 32px);
+  pointer-events:none;z-index:0;opacity:0.6;
+}
+body::after {
+  content:'';position:fixed;top:0;bottom:0;left:60px;
+  width:2px;background:rgba(214,48,49,0.3);z-index:0;pointer-events:none;
+}
+
+.page-wrapper {
+  position:relative;z-index:1;
+  max-width:980px;margin:0 auto;
+  padding:0 20px 80px 80px;
+}
+
+/* -------- NAV -------- */
+nav {
+  position:sticky;top:0;z-index:100;
+  background:rgba(253,249,240,0.96);backdrop-filter:blur(8px);
+  border-bottom:2px solid var(--paper-lines);
+  padding:8px 0;
+  margin-left:-80px;padding-left:80px;
+  margin-right:-20px;padding-right:20px;
+}
+.nav-inner{display:flex;flex-wrap:wrap;gap:4px;align-items:center;max-width:980px;margin:0 auto;padding-left:60px;}
+.nav-link{font-family:'Caveat',cursive;font-size:15px;font-weight:600;color:var(--ink-light);text-decoration:none;padding:4px 10px;border-radius:12px;transition:all .2s;white-space:nowrap;}
+.nav-link:hover{background:var(--paper-dark);color:var(--pencil-blue);}
+.nav-page-badge{font-family:'Caveat Brush',cursive;font-size:13px;background:var(--pencil-blue);color:white;padding:3px 10px;border-radius:12px;margin-right:6px;}
+
+/* -------- HERO -------- */
+.hero{padding:48px 0 32px;position:relative;}
+.page-num-big{font-family:'Caveat Brush',cursive;font-size:clamp(80px,15vw,140px);color:rgba(9,132,227,0.08);position:absolute;top:-10px;right:0;line-height:1;pointer-events:none;user-select:none;}
+.hero-title{font-family:'Caveat Brush',cursive;font-size:clamp(32px,6vw,58px);color:var(--pencil-blue);line-height:1.1;transform:rotate(-0.8deg);display:inline-block;}
+.hero-sub{font-family:'Patrick Hand',cursive;font-size:clamp(15px,2.5vw,20px);color:var(--ink-light);margin-top:10px;}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.chip{font-family:'Caveat',cursive;font-size:14px;font-weight:600;padding:4px 13px;border-radius:16px;border:2px solid currentColor;display:inline-flex;align-items:center;gap:5px;}
+
+/* -------- SECTIONS -------- */
+.section{margin-top:52px;position:relative;}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.section-num{font-family:'Caveat Brush',cursive;font-size:26px;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:3px solid currentColor;line-height:1;}
+.section-title{font-family:'Caveat Brush',cursive;font-size:clamp(22px,4.5vw,34px);line-height:1.1;}
+.s-red .section-num{color:var(--pencil-red);}.s-red .section-title{color:var(--pencil-red);}
+.s-blue .section-num{color:var(--pencil-blue);}.s-blue .section-title{color:var(--pencil-blue);}
+.s-green .section-num{color:var(--pencil-green);}.s-green .section-title{color:var(--pencil-green);}
+.s-purple .section-num{color:var(--pencil-purple);}.s-purple .section-title{color:var(--pencil-purple);}
+.s-orange .section-num{color:var(--pencil-orange);}.s-orange .section-title{color:var(--pencil-orange);}
+.s-teal .section-num{color:var(--pencil-teal);}.s-teal .section-title{color:var(--pencil-teal);}
+.s-pink .section-num{color:var(--pencil-pink);}.s-pink .section-title{color:var(--pencil-pink);}
+
+/* -------- CARDS -------- */
+.card{background:white;border:2px solid var(--paper-lines);border-radius:12px;padding:18px 22px;position:relative;box-shadow:3px 4px 0 var(--paper-lines);margin-bottom:16px;}
+.card::before{content:'';position:absolute;top:0;left:20px;width:60px;height:3px;background:var(--card-color,var(--pencil-blue));border-radius:0 0 4px 4px;}
+.card-title{font-family:'Caveat Brush',cursive;font-size:21px;color:var(--card-color,var(--pencil-blue));margin-bottom:8px;}
+.card-body{font-family:'Patrick Hand',cursive;font-size:15px;line-height:1.7;color:var(--ink-light);}
+
+/* -------- NOTE BOXES -------- */
+.note{border-left:4px solid var(--note-color,var(--pencil-yellow));background:var(--note-bg,rgba(253,203,110,0.15));padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-family:'Patrick Hand',cursive;font-size:14.5px;line-height:1.6;color:var(--ink-light);}
+.note-label{font-family:'Caveat Brush',cursive;font-size:14px;margin-bottom:4px;color:var(--note-color,#c9a002);display:block;}
+.note-tip{--note-color:var(--pencil-green);--note-bg:rgba(0,184,148,0.1);}
+.note-brain{--note-color:var(--pencil-purple);--note-bg:rgba(108,92,231,0.1);}
+.note-warn{--note-color:var(--pencil-orange);--note-bg:rgba(225,112,85,0.1);}
+.note-star{--note-color:var(--pencil-red);--note-bg:rgba(214,48,49,0.1);}
+
+/* -------- VISUALIZER SHELL -------- */
+.viz-shell {
+  background:white;border:2px solid var(--paper-lines);border-radius:14px;
+  overflow:hidden;box-shadow:4px 5px 0 var(--paper-lines);margin-bottom:20px;
+}
+.viz-header {
+  background:var(--paper-dark);border-bottom:2px solid var(--paper-lines);
+  padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+.viz-title{font-family:'Caveat Brush',cursive;font-size:20px;color:var(--viz-color,var(--pencil-blue));}
+.viz-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.viz-btn {
+  font-family:'Caveat',cursive;font-size:14px;font-weight:700;
+  padding:6px 16px;border-radius:20px;border:2px solid currentColor;
+  cursor:pointer;background:white;transition:all .15s;
+}
+.viz-btn:hover{filter:brightness(0.93);}
+.viz-btn-primary{background:var(--viz-color,var(--pencil-blue));color:white;border-color:var(--viz-color,var(--pencil-blue));}
+.viz-btn-primary:hover{filter:brightness(1.1);}
+.viz-select{font-family:'Caveat',cursive;font-size:14px;font-weight:600;padding:5px 10px;border-radius:10px;border:2px solid var(--paper-lines);background:white;color:var(--ink-dark);cursor:pointer;}
+.viz-body{padding:18px;}
+.viz-speed{display:flex;align-items:center;gap:6px;font-family:'Caveat',cursive;font-size:13px;color:var(--ink-light);}
+.viz-speed input{width:70px;}
+
+/* ---- Sorting bars ---- */
+.sort-canvas {
+  width:100%;height:200px;position:relative;
+  display:flex;align-items:flex-end;gap:3px;
+  border-bottom:2px solid var(--paper-lines);
+  padding:8px 4px 0;
+}
+.sort-bar {
+  flex:1;border-radius:4px 4px 0 0;position:relative;
+  transition:height .1s ease;min-width:4px;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.sort-bar-label{font-family:'Caveat',cursive;font-size:10px;color:white;font-weight:700;padding-bottom:2px;line-height:1;}
+.sort-info{font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);margin-top:10px;text-align:center;min-height:20px;}
+.sort-stats{display:flex;gap:20px;justify-content:center;margin-top:8px;flex-wrap:wrap;}
+.sort-stat{font-family:'Caveat',cursive;font-size:15px;font-weight:700;}
+
+/* ---- Binary Search ---- */
+.bs-array {
+  display:flex;flex-wrap:wrap;gap:4px;margin:10px 0;
+}
+.bs-cell {
+  width:44px;height:44px;border-radius:8px;border:2px solid var(--paper-lines);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Caveat Brush',cursive;font-size:18px;background:white;
+  transition:all .3s;position:relative;flex-shrink:0;
+}
+.bs-cell.active-range{background:rgba(9,132,227,0.1);border-color:var(--pencil-blue);}
+.bs-cell.mid{background:var(--pencil-blue);color:white;border-color:var(--pencil-blue);transform:scale(1.15);}
+.bs-cell.found{background:var(--pencil-green);color:white;border-color:var(--pencil-green);}
+.bs-cell.eliminated{background:rgba(0,0,0,0.04);color:#aaa;border-color:#ddd;}
+.bs-pointers{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.bs-ptr{font-family:'Caveat',cursive;font-size:14px;font-weight:700;padding:3px 10px;border-radius:10px;}
+.bs-log{font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);margin-top:8px;line-height:1.6;min-height:40px;background:var(--paper-dark);padding:8px 12px;border-radius:8px;}
+
+/* ---- Tree Viz ---- */
+.tree-svg-wrap{width:100%;overflow-x:auto;}
+.tree-svg{display:block;margin:0 auto;}
+
+/* ---- Graph Viz ---- */
+.graph-canvas{width:100%;border-radius:8px;cursor:grab;background:var(--paper-dark);}
+.graph-canvas:active{cursor:grabbing;}
+.graph-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.graph-legend-item{font-family:'Patrick Hand',cursive;font-size:13px;display:flex;align-items:center;gap:5px;color:var(--ink-light);}
+.graph-legend-dot{width:12px;height:12px;border-radius:50%;}
+
+/* ---- Q&A SECTION ---- */
+.qa-container{display:flex;flex-direction:column;gap:14px;}
+.qa-item{background:white;border:2px solid var(--paper-lines);border-radius:12px;overflow:hidden;box-shadow:2px 3px 0 var(--paper-lines);transition:box-shadow .2s;}
+.qa-item:hover{box-shadow:4px 6px 0 var(--paper-lines);}
+.qa-question{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;background:var(--paper-dark);}
+.qa-q-text{font-family:'Caveat Brush',cursive;font-size:18px;color:var(--ink-dark);line-height:1.3;}
+.qa-diff{font-family:'Caveat',cursive;font-size:12px;font-weight:700;padding:2px 9px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
+.diff-easy{background:rgba(0,184,148,0.15);color:#00a37a;}
+.diff-medium{background:rgba(253,203,110,0.35);color:#c47d00;}
+.diff-hard{background:rgba(214,48,49,0.15);color:var(--pencil-red);}
+.qa-arrow{font-size:16px;transition:transform .3s;flex-shrink:0;color:var(--ink-light);}
+.qa-answer{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;font-family:'Patrick Hand',cursive;font-size:14.5px;line-height:1.7;color:var(--ink-light);background:white;}
+.qa-answer.open{max-height:800px;padding:14px 18px 18px;}
+.qa-answer .highlight{background:rgba(253,203,110,0.35);padding:2px 6px;border-radius:4px;font-weight:600;font-family:'Caveat',cursive;font-size:16px;}
+.qa-category{font-family:'Caveat',cursive;font-size:12px;font-weight:700;padding:2px 9px;border-radius:10px;border:1.5px solid currentColor;margin-right:6px;}
+
+/* ---- TOPIC EXPLAINER ---- */
+.topic-explainer{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.topic-card{background:white;border:2px solid var(--paper-lines);border-radius:12px;padding:16px;box-shadow:2px 3px 0 var(--paper-lines);cursor:pointer;transition:all .2s;}
+.topic-card:hover{transform:translateY(-3px) rotate(-0.4deg);box-shadow:4px 6px 0 var(--paper-lines);}
+.topic-card.active-topic{border-color:var(--t-color,var(--pencil-blue));background:rgba(9,132,227,0.04);}
+.topic-card-icon{font-size:28px;margin-bottom:6px;}
+.topic-card-name{font-family:'Caveat Brush',cursive;font-size:19px;color:var(--t-color,var(--ink-dark));}
+.topic-card-tagline{font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);margin-top:4px;line-height:1.4;}
+.topic-detail-panel{background:white;border:2px solid var(--paper-lines);border-radius:12px;padding:20px;box-shadow:3px 4px 0 var(--paper-lines);margin-top:16px;display:none;}
+.topic-detail-panel.visible{display:block;animation:fadeUp .3s ease;}
+
+/* ---- TABLES ---- */
+table.nice-table{width:100%;border-collapse:collapse;margin:10px 0;}
+table.nice-table th{font-family:'Caveat Brush',cursive;font-size:15px;background:var(--paper-dark);padding:8px 12px;text-align:left;border-bottom:2px solid var(--paper-lines);color:var(--ink-dark);}
+table.nice-table td{font-family:'Patrick Hand',cursive;font-size:14px;padding:8px 12px;border-bottom:1px dashed var(--paper-lines);color:var(--ink-light);vertical-align:top;}
+table.nice-table tr:last-child td{border-bottom:none;}
+
+/* ---- INLINE FORMULA ---- */
+.inline-formula{font-family:'Caveat',cursive;font-weight:700;font-size:17px;background:rgba(253,203,110,0.35);padding:2px 7px;border-radius:4px;}
+
+/* ---- SEARCH/FILTER ---- */
+.search-bar{width:100%;font-family:'Patrick Hand',cursive;font-size:15px;padding:10px 16px;border-radius:12px;border:2px solid var(--paper-lines);background:white;color:var(--ink-dark);outline:none;margin-bottom:16px;transition:border-color .2s;}
+.search-bar:focus{border-color:var(--pencil-blue);}
+.filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.filter-pill{font-family:'Caveat',cursive;font-size:14px;font-weight:600;padding:5px 14px;border-radius:16px;border:2px solid var(--paper-lines);background:white;cursor:pointer;transition:all .15s;color:var(--ink-light);}
+.filter-pill.active{background:var(--pill-color,var(--pencil-blue));color:white;border-color:var(--pill-color,var(--pencil-blue));}
+
+/* ---- PROGRESS BAR ---- */
+.meter-wrap{margin:6px 0;}
+.meter-label{font-family:'Caveat',cursive;font-size:13px;color:var(--ink-light);margin-bottom:3px;display:flex;justify-content:space-between;}
+.meter-track{height:9px;background:var(--paper-dark);border-radius:10px;overflow:hidden;border:1.5px solid var(--paper-lines);}
+.meter-fill{height:100%;border-radius:10px;transition:width 1s ease;}
+
+/* ---- CODE BOX ---- */
+.code-box{background:#1a1208;border:2px solid #3d2b0a;border-radius:12px;padding:14px 18px;margin:10px 0;overflow-x:auto;position:relative;}
+.code-box pre{font-family:'Caveat',cursive;font-size:14px;line-height:1.8;color:#fdf9f0;white-space:pre-wrap;}
+.code-kw{color:#fd79a8;}.code-fn{color:#74b9ff;}.code-num{color:#fdcb6e;}.code-cmt{color:#6b9e6b;}.code-str{color:#55efc4;}
+
+/* ---- TWO COL ---- */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:620px){.two-col{grid-template-columns:1fr;}.page-wrapper{padding-left:50px;}body::after{left:36px;}}
+
+/* ---- STEP BOXES ---- */
+.steps{display:flex;flex-direction:column;gap:10px;}
+.step{display:flex;gap:12px;align-items:flex-start;background:white;border:2px solid var(--paper-lines);border-radius:10px;padding:12px 14px;box-shadow:2px 2px 0 var(--paper-lines);}
+.step-num{font-family:'Caveat Brush',cursive;font-size:22px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2.5px solid currentColor;}
+.step-text{font-family:'Patrick Hand',cursive;font-size:14.5px;line-height:1.6;color:var(--ink-light);padding-top:4px;}
+
+/* ---- TABS ---- */
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px;}
+.tab-btn{font-family:'Caveat',cursive;font-size:14px;font-weight:600;padding:6px 14px;border-radius:18px;border:2px solid var(--paper-lines);background:white;cursor:pointer;transition:all .2s;color:var(--ink-light);}
+.tab-btn.active{background:var(--tab-color,var(--pencil-blue));color:white;border-color:var(--tab-color,var(--pencil-blue));}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+
+/* ---- FOOTER ---- */
+.footer{margin-top:72px;padding-top:22px;border-top:2px dashed var(--paper-lines);text-align:center;font-family:'Caveat',cursive;font-size:18px;color:var(--ink-light);}
+
+/* ---- ANIMS ---- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.anim-fadein{animation:fadeUp .4s ease forwards;}
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-page-badge">📓 Page 2</span>
+    <a href="dsa-page1.html" class="nav-link">← Page 1: Basics</a>
+    <a href="#visualizers" class="nav-link">🎬 Visualizers</a>
+    <a href="#sorting-viz" class="nav-link">🔀 Sorting</a>
+    <a href="#search-viz" class="nav-link">🔍 Search</a>
+    <a href="#tree-viz" class="nav-link">🌳 Trees</a>
+    <a href="#graph-viz" class="nav-link">🕸 Graphs</a>
+    <a href="#qa" class="nav-link">❓ Q&A</a>
+    <a href="#topics" class="nav-link">📚 Topics</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="page-num-big">2</div>
+  <div class="hero-title">See It. Feel It. Get It.</div>
+  <div class="hero-sub">Live visualizations + Q&A + plain English explanations — for every kind of learner 🎨</div>
+  <div class="hero-chips" style="margin-top:14px;">
+    <span class="chip" style="color:var(--pencil-blue);">🎬 4 Live Visualizers</span>
+    <span class="chip" style="color:var(--pencil-green);">❓ 30+ Q&A Cards</span>
+    <span class="chip" style="color:var(--pencil-purple);">📚 12 Topic Explainers</span>
+    <span class="chip" style="color:var(--pencil-orange);">🧑 Anyone Can Understand</span>
+  </div>
+  <div class="note note-brain" style="margin-top:22px;max-width:580px;">
+    <span class="note-label">🧠 How to use this page:</span>
+    Play with the visualizers — press buttons, change speed. Then read the Q&A cards. Then open any topic card and read it in plain English. No coding background needed to understand any of this!
+  </div>
+</header>
+
+<!-- ================================================================
+     SECTION 1: VISUALIZERS INTRO
+================================================================ -->
+<section class="section s-blue" id="visualizers">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div class="section-title">Live Algorithm Visualizers</div>
+  </div>
+  <p class="card-body" style="font-family:'Patrick Hand',cursive;font-size:15px;color:var(--ink-light);margin-bottom:16px;">
+    Each visualizer below runs a real algorithm step by step. Watch the bars move, the tree nodes light up, the pointer jump. You'll <em>see</em> what the code is doing — no explanation needed!
+  </p>
+</section>
+
+<!-- ================================================================
+     VISUALIZER 1: SORTING
+================================================================ -->
+<section class="section s-orange" id="sorting-viz">
+  <div class="section-header">
+    <div class="section-num">🔀</div>
+    <div class="section-title">Sorting Visualizer</div>
+  </div>
+
+  <div class="note note-tip" style="margin-bottom:14px;">
+    <span class="note-label">🤔 What is Sorting?</span>
+    Imagine your music playlist in random order. Sorting = arranging songs A→Z (or 1→100). Computers sort millions of items every second. But HOW they sort — that's the algorithm. Different methods = different speeds!
+  </div>
+
+  <div class="viz-shell" style="--viz-color:var(--pencil-orange);">
+    <div class="viz-header">
+      <div class="viz-title">📊 Sorting Algorithms</div>
+      <div class="viz-controls">
+        <select class="viz-select" id="sortAlgo">
+          <option value="bubble">Bubble Sort</option>
+          <option value="selection">Selection Sort</option>
+          <option value="insertion">Insertion Sort</option>
+          <option value="merge">Merge Sort</option>
+          <option value="quick">Quick Sort</option>
+        </select>
+        <select class="viz-select" id="sortSize">
+          <option value="20">20 bars</option>
+          <option value="35" selected>35 bars</option>
+          <option value="50">50 bars</option>
+        </select>
+        <div class="viz-speed">
+          🐢<input type="range" id="sortSpeed" min="1" max="10" value="5">🐇
+        </div>
+        <button class="viz-btn viz-btn-primary" id="sortPlayBtn" style="--viz-color:var(--pencil-orange);" onclick="sortControl()">▶ Play</button>
+        <button class="viz-btn" style="color:var(--pencil-orange);" onclick="generateArray()">🔀 New</button>
+      </div>
+    </div>
+    <div class="viz-body">
+      <div class="sort-canvas" id="sortCanvas"></div>
+      <div class="sort-info" id="sortInfo">Press ▶ Play to start sorting!</div>
+      <div class="sort-stats">
+        <span class="sort-stat" style="color:var(--pencil-orange);">Comparisons: <span id="sortComps">0</span></span>
+        <span class="sort-stat" style="color:var(--pencil-blue);">Swaps: <span id="sortSwaps">0</span></span>
+        <span class="sort-stat" style="color:var(--pencil-green);">Status: <span id="sortStatus">Ready</span></span>
+      </div>
+
+      <!-- Algorithm explainer cards below -->
+      <div style="margin-top:18px;border-top:2px dashed var(--paper-lines);padding-top:14px;">
+        <div id="algoExplain"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sorting complexity comparison -->
+  <div class="card" style="--card-color:var(--pencil-orange);">
+    <div class="card-title">📖 Sorting Algorithms — Plain English</div>
+    <table class="nice-table">
+      <thead><tr><th>Algorithm</th><th>How a kid would explain it</th><th>Best Speed</th><th>Worst Speed</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--pencil-red)">Bubble Sort</strong></td>
+          <td>Compare two neighbors. If left > right, swap them. Keep doing passes until nothing swaps. Like bubbles rising to top!</td>
+          <td style="color:var(--pencil-green)">O(n)</td>
+          <td style="color:var(--pencil-red)">O(n²)</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--pencil-blue)">Selection Sort</strong></td>
+          <td>Find the smallest number. Put it first. Find next smallest. Put it second. Simple but slow.</td>
+          <td style="color:var(--pencil-orange)">O(n²)</td>
+          <td style="color:var(--pencil-red)">O(n²)</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--pencil-purple)">Insertion Sort</strong></td>
+          <td>Like sorting playing cards in your hand. Pick next card, slide it left until it's in right spot.</td>
+          <td style="color:var(--pencil-green)">O(n)</td>
+          <td style="color:var(--pencil-red)">O(n²)</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--pencil-teal)">Merge Sort</strong></td>
+          <td>Split list in half, sort each half, then merge back together. Divide and conquer! Always same speed.</td>
+          <td style="color:var(--pencil-green)">O(n log n)</td>
+          <td style="color:var(--pencil-green)">O(n log n)</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--pencil-green)">Quick Sort</strong></td>
+          <td>Pick a "pivot" number. Put smaller numbers left, bigger right. Sort each side. Usually fastest in practice!</td>
+          <td style="color:var(--pencil-green)">O(n log n)</td>
+          <td style="color:var(--pencil-red)">O(n²)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ================================================================
+     VISUALIZER 2: BINARY SEARCH
+================================================================ -->
+<section class="section s-blue" id="search-viz">
+  <div class="section-header">
+    <div class="section-num">🔍</div>
+    <div class="section-title">Binary Search Visualizer</div>
+  </div>
+
+  <div class="note note-brain" style="margin-bottom:14px;">
+    <span class="note-label">🤔 What is Binary Search?</span>
+    Imagine a dictionary with 100,000 words. To find "Mango", you don't start from page 1! You open the middle. "Mango" comes after "M-A-L"? Open right half's middle. Repeat. That's binary search — cut the problem in HALF each step!
+  </div>
+
+  <div class="viz-shell" style="--viz-color:var(--pencil-blue);">
+    <div class="viz-header">
+      <div class="viz-title">🔍 Binary Search Step-by-Step</div>
+      <div class="viz-controls">
+        <input type="number" id="bsTarget" placeholder="Find number..." min="1" max="99" style="font-family:'Caveat',cursive;font-size:15px;font-weight:700;width:130px;padding:5px 10px;border-radius:10px;border:2px solid var(--paper-lines);background:white;color:var(--ink-dark);">
+        <button class="viz-btn viz-btn-primary" style="--viz-color:var(--pencil-blue);" onclick="startBinarySearch()">🔍 Search</button>
+        <button class="viz-btn" style="color:var(--pencil-blue);" onclick="bsStep()">⏭ Step</button>
+        <button class="viz-btn" style="color:var(--pencil-purple);" onclick="resetBS()">🔄 Reset</button>
+      </div>
+    </div>
+    <div class="viz-body">
+      <div style="font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);margin-bottom:8px;">Array (sorted, tap a number to search for it):</div>
+      <div class="bs-array" id="bsArray"></div>
+      <div class="bs-pointers" id="bsPointers"></div>
+      <div class="bs-log" id="bsLog">👆 Enter a number and press Search — or click any cell!</div>
+
+      <div style="margin-top:14px;display:flex;gap:12px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);">
+          <div style="width:14px;height:14px;background:var(--pencil-blue);border-radius:3px;"></div> Mid (checking)
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);">
+          <div style="width:14px;height:14px;background:rgba(9,132,227,0.15);border-radius:3px;border:2px solid var(--pencil-blue);"></div> Active range
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);">
+          <div style="width:14px;height:14px;background:#ddd;border-radius:3px;"></div> Eliminated
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);">
+          <div style="width:14px;height:14px;background:var(--pencil-green);border-radius:3px;"></div> Found! ✓
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="--card-color:var(--pencil-blue);">
+    <div class="card-title">💡 Why Binary Search is Magic</div>
+    <div class="card-body">
+      With 1,000,000 numbers, linear search needs up to 1,000,000 steps.<br>
+      Binary search needs at most <span class="inline-formula">log₂(1,000,000) ≈ 20 steps</span>.<br><br>
+      That's the difference between 1 second and 0.00002 seconds! 🚀
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     VISUALIZER 3: TREE TRAVERSAL
+================================================================ -->
+<section class="section s-teal" id="tree-viz">
+  <div class="section-header">
+    <div class="section-num">🌳</div>
+    <div class="section-title">Tree Traversal Visualizer</div>
+  </div>
+
+  <div class="note note-tip" style="margin-bottom:14px;">
+    <span class="note-label">🤔 What is a Tree?</span>
+    Think of your family tree! You're connected to parents, who are connected to grandparents. In computers, a "tree" organizes data in parent-child relationships. The "root" is at top (opposite of real trees!). Each node can have left/right children.
+  </div>
+
+  <div class="viz-shell" style="--viz-color:var(--pencil-teal);">
+    <div class="viz-header">
+      <div class="viz-title">🌳 Binary Tree Traversal</div>
+      <div class="viz-controls">
+        <select class="viz-select" id="traversalType">
+          <option value="inorder">Inorder (L→Root→R)</option>
+          <option value="preorder">Preorder (Root→L→R)</option>
+          <option value="postorder">Postorder (L→R→Root)</option>
+          <option value="levelorder">Level Order (BFS)</option>
+        </select>
+        <button class="viz-btn viz-btn-primary" style="--viz-color:var(--pencil-teal);" onclick="startTraversal()">▶ Traverse</button>
+        <button class="viz-btn" style="color:var(--pencil-teal);" onclick="treeStep()">⏭ Step</button>
+        <button class="viz-btn" style="color:var(--pencil-purple);" onclick="resetTree()">🔄 Reset</button>
+      </div>
+    </div>
+    <div class="viz-body">
+      <div class="tree-svg-wrap">
+        <svg class="tree-svg" id="treeSvg" width="560" height="220" viewBox="0 0 560 220"></svg>
+      </div>
+      <div style="margin-top:12px;">
+        <div style="font-family:'Caveat',cursive;font-size:15px;font-weight:700;color:var(--ink-light);margin-bottom:6px;">Visit order:</div>
+        <div id="treeVisitOrder" style="display:flex;flex-wrap:wrap;gap:6px;min-height:36px;"></div>
+      </div>
+      <div id="treeLog" style="font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);margin-top:10px;background:var(--paper-dark);padding:8px 12px;border-radius:8px;min-height:32px;">
+        Choose a traversal type and press ▶ Traverse!
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card" style="--card-color:var(--pencil-teal);">
+      <div class="card-title">🗺 Inorder (Left→Root→Right)</div>
+      <div class="card-body">
+        For a BST, gives nodes in <strong>sorted order</strong>!<br>
+        Use: getting sorted list from BST, validate BST.
+      </div>
+    </div>
+    <div class="card" style="--card-color:var(--pencil-purple);">
+      <div class="card-title">📷 Preorder (Root→Left→Right)</div>
+      <div class="card-body">
+        Visits root <strong>first</strong>. Used to <strong>copy/serialize</strong> a tree.<br>
+        Think: take a photo of the tree top-down.
+      </div>
+    </div>
+    <div class="card" style="--card-color:var(--pencil-orange);">
+      <div class="card-title">🗑 Postorder (Left→Right→Root)</div>
+      <div class="card-body">
+        Visits root <strong>last</strong>. Used to <strong>delete</strong> a tree safely (children first, then parent).
+      </div>
+    </div>
+    <div class="card" style="--card-color:var(--pencil-blue);">
+      <div class="card-title">🏢 Level Order (BFS)</div>
+      <div class="card-body">
+        Level by level, left to right. Like reading a building floor by floor. Uses a Queue. Finds shortest path!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     VISUALIZER 4: GRAPH BFS/DFS
+================================================================ -->
+<section class="section s-purple" id="graph-viz">
+  <div class="section-header">
+    <div class="section-num">🕸</div>
+    <div class="section-title">Graph Traversal Visualizer</div>
+  </div>
+
+  <div class="note note-warn" style="margin-bottom:14px;">
+    <span class="note-label">🤔 What is a Graph?</span>
+    A graph is dots (nodes) connected by lines (edges). Think: cities connected by roads. Facebook friends. Web pages linked together. Everything is a graph! We need to "explore" them — visit every node.
+  </div>
+
+  <div class="viz-shell" style="--viz-color:var(--pencil-purple);">
+    <div class="viz-header">
+      <div class="viz-title">🕸 Graph: BFS vs DFS</div>
+      <div class="viz-controls">
+        <select class="viz-select" id="graphAlgo">
+          <option value="bfs">BFS (Queue — Level by Level)</option>
+          <option value="dfs">DFS (Stack — Depth First)</option>
+        </select>
+        <button class="viz-btn viz-btn-primary" style="--viz-color:var(--pencil-purple);" onclick="startGraph()">▶ Start</button>
+        <button class="viz-btn" style="color:var(--pencil-purple);" onclick="graphStep()">⏭ Step</button>
+        <button class="viz-btn" style="color:var(--pencil-teal);" onclick="resetGraph()">🔄 Reset</button>
+      </div>
+    </div>
+    <div class="viz-body">
+      <canvas class="graph-canvas" id="graphCanvas" width="560" height="260"></canvas>
+      <div class="graph-legend">
+        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:var(--pencil-green);"></div>Start node</div>
+        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:var(--pencil-orange);"></div>Currently visiting</div>
+        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:var(--pencil-blue);"></div>In queue/stack</div>
+        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:var(--paper-dark);border:2px solid var(--paper-lines);"></div>Unvisited</div>
+        <div class="graph-legend-item"><div class="graph-legend-dot" style="background:#ddd;"></div>Visited</div>
+      </div>
+      <div id="graphLog" style="font-family:'Patrick Hand',cursive;font-size:13px;color:var(--ink-light);margin-top:10px;background:var(--paper-dark);padding:8px 12px;border-radius:8px;min-height:32px;">
+        Press ▶ Start then keep pressing ⏭ Step to see BFS or DFS in action!
+      </div>
+      <div style="margin-top:8px;font-family:'Caveat',cursive;font-size:14px;font-weight:700;color:var(--ink-light);">
+        Visit order: <span id="graphOrder" style="color:var(--pencil-purple);">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card" style="--card-color:var(--pencil-blue);">
+      <div class="card-title">🔵 BFS — Breadth First</div>
+      <div class="card-body">
+        Uses a <strong>Queue</strong> (FIFO). Explores all neighbors of current node before going deeper.<br>
+        Like ripples in a pond. Finds <strong>shortest path</strong>!<br>
+        Use: maps, social networks distance, web crawling.
+      </div>
+    </div>
+    <div class="card" style="--card-color:var(--pencil-purple);">
+      <div class="card-title">🟣 DFS — Depth First</div>
+      <div class="card-body">
+        Uses a <strong>Stack</strong> (or recursion). Dives as deep as possible before backtracking.<br>
+        Like exploring a maze — go all the way then back up.<br>
+        Use: cycle detection, topological sort, puzzle solving.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SECTION: Q&A BANK
+================================================================ -->
+<section class="section s-green" id="qa">
+  <div class="section-header">
+    <div class="section-num">❓</div>
+    <div class="section-title">DSA Questions & Answers — Interview Bank</div>
+  </div>
+
+  <input type="text" class="search-bar" id="qaSearch" placeholder="🔍 Search questions... (e.g. 'tree', 'sorting', 'easy')" oninput="filterQA()">
+
+  <div class="filter-pills">
+    <button class="filter-pill active" style="--pill-color:var(--pencil-blue);" onclick="filterByTag(this,'all')">All</button>
+    <button class="filter-pill" style="--pill-color:var(--pencil-green);" onclick="filterByTag(this,'easy')">🟢 Easy</button>
+    <button class="filter-pill" style="--pill-color:var(--pencil-yellow);color:var(--ink-light);" onclick="filterByTag(this,'medium')">🟡 Medium</button>
+    <button class="filter-pill" style="--pill-color:var(--pencil-red);" onclick="filterByTag(this,'hard')">🔴 Hard</button>
+    <button class="filter-pill" style="--pill-color:var(--pencil-orange);" onclick="filterByTag(this,'sorting')">🔀 Sorting</button>
+    <button class="filter-pill" style="--pill-color:var(--pencil-teal);" onclick="filterByTag(this,'tree')">🌳 Trees</button>
+    <button class="filter-pill" style="--pill-color:var(--pencil-purple);" onclick="filterByTag(this,'graph')">🕸 Graphs</button>
+    <button class="filter-pill" style="--pill-color:var(--pencil-blue);" onclick="filterByTag(this,'search')">🔍 Searching</button>
+    <button class="filter-pill" style="--pill-color:var(--pencil-red);" onclick="filterByTag(this,'dp')">💡 DP</button>
+  </div>
+
+  <div class="qa-container" id="qaContainer"></div>
+</section>
+
+<!-- ================================================================
+     SECTION: TOPIC EXPLAINERS
+================================================================ -->
+<section class="section s-pink" id="topics">
+  <div class="section-header">
+    <div class="section-num">📚</div>
+    <div class="section-title">Topic Explainers — For Absolute Beginners</div>
+  </div>
+
+  <div class="note note-tip" style="margin-bottom:16px;">
+    <span class="note-label">👆 How to use:</span>
+    Click any topic card below to see a full plain-English explanation with real-world analogies, complexity, and when to use it!
+  </div>
+
+  <div class="topic-explainer" id="topicGrid"></div>
+  <div class="topic-detail-panel" id="topicPanel"></div>
+</section>
+
+<!-- ================================================================
+     SECTION: COMPLEXITY CHEAT SHEET
+================================================================ -->
+<section class="section s-red">
+  <div class="section-header">
+    <div class="section-num">📋</div>
+    <div class="section-title">Ultimate Complexity Cheat Sheet</div>
+  </div>
+
+  <div class="card" style="--card-color:var(--pencil-red);">
+    <div class="card-title">⚡ Data Structure Operations — Know These Cold</div>
+    <table class="nice-table">
+      <thead><tr><th>Data Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th><th>Space</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:var(--pencil-blue)">Array</strong></td><td style="color:var(--pencil-green)">O(1)</td><td>O(n)</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+        <tr><td><strong style="color:var(--pencil-purple)">LinkedList</strong></td><td>O(n)</td><td>O(n)</td><td style="color:var(--pencil-green)">O(1)*</td><td style="color:var(--pencil-green)">O(1)*</td><td>O(n)</td></tr>
+        <tr><td><strong style="color:var(--pencil-orange)">Stack/Queue</strong></td><td>O(n)</td><td>O(n)</td><td style="color:var(--pencil-green)">O(1)</td><td style="color:var(--pencil-green)">O(1)</td><td>O(n)</td></tr>
+        <tr><td><strong style="color:var(--pencil-teal)">HashMap</strong></td><td>—</td><td style="color:var(--pencil-green)">O(1)†</td><td style="color:var(--pencil-green)">O(1)†</td><td style="color:var(--pencil-green)">O(1)†</td><td>O(n)</td></tr>
+        <tr><td><strong style="color:var(--pencil-green)">BST (balanced)</strong></td><td>—</td><td style="color:var(--pencil-green)">O(log n)</td><td style="color:var(--pencil-green)">O(log n)</td><td style="color:var(--pencil-green)">O(log n)</td><td>O(n)</td></tr>
+        <tr><td><strong style="color:var(--pencil-pink)">Heap</strong></td><td>—</td><td>O(n)</td><td style="color:var(--pencil-green)">O(log n)</td><td style="color:var(--pencil-green)">O(log n)</td><td>O(n)</td></tr>
+        <tr><td><strong style="color:var(--pencil-red)">Trie</strong></td><td>—</td><td style="color:var(--pencil-green)">O(k)</td><td style="color:var(--pencil-green)">O(k)</td><td style="color:var(--pencil-green)">O(k)</td><td>O(n·k)</td></tr>
+      </tbody>
+    </table>
+    <div style="font-family:'Patrick Hand',cursive;font-size:12px;color:var(--ink-light);margin-top:6px;">* At head/tail with pointer &nbsp;|&nbsp; † Average case, O(n) worst</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div style="font-size:26px;">🎨</div>
+  <div style="margin-top:6px;">Page 2 of Moin's DSA Notebook — Built to make algorithms <strong style="color:var(--pencil-blue)">visible</strong></div>
+  <div style="margin-top:6px;font-size:15px;opacity:0.7;">← <a href="dsa-page1.html" style="color:var(--pencil-blue);">Back to Page 1: Theory</a> &nbsp;|&nbsp; Page 3 coming soon — Practice Problems DP deep dive →</div>
+</footer>
+
+</div><!-- end page-wrapper -->
+
+<script>
+// ================================================================
+//  SORTING VISUALIZER
+// ================================================================
+let sortArr = [], sortAnimating = false, sortPaused = false, sortTimeout = null;
+let sortComps = 0, sortSwaps = 0;
+const COLORS = {
+  default: '#e8dfc8',
+  compare: '#e17055',
+  swap: '#d63031',
+  sorted: '#00b894',
+  pivot: '#6c5ce7',
+  selected: '#fdcb6e'
+};
+
+const ALGO_EXPLAINERS = {
+  bubble: { title:'🫧 Bubble Sort', emoji:'🫧', explain:'Compare every pair of neighbors. If left > right, swap. Repeat passes until no swaps happen. Small numbers "bubble up" to the front each pass.', code:'for i in range(n):\n  for j in range(n-i-1):\n    if arr[j] > arr[j+1]:\n      swap(arr[j], arr[j+1])' },
+  selection: { title:'🎯 Selection Sort', emoji:'🎯', explain:'Find the minimum element in the unsorted part. Swap it to the front. Now the sorted part grows by 1. Repeat.', code:'for i in range(n):\n  min_idx = i\n  for j in range(i+1, n):\n    if arr[j] < arr[min_idx]:\n      min_idx = j\n  swap(arr[i], arr[min_idx])' },
+  insertion: { title:'🃏 Insertion Sort', emoji:'🃏', explain:'Like sorting cards in your hand. Take each new card, slide it left until it\'s in the right position among already-sorted cards.', code:'for i in range(1, n):\n  key = arr[i]\n  j = i - 1\n  while j >= 0 and arr[j] > key:\n    arr[j+1] = arr[j]\n    j -= 1\n  arr[j+1] = key' },
+  merge: { title:'🔀 Merge Sort', emoji:'🔀', explain:'Divide the array in half. Sort each half. Merge the two sorted halves. Keep dividing until you reach arrays of size 1. Then merge all the way back up.', code:'def merge_sort(arr):\n  if len(arr) <= 1: return arr\n  mid = len(arr)//2\n  left = merge_sort(arr[:mid])\n  right = merge_sort(arr[mid:])\n  return merge(left, right)' },
+  quick: { title:'⚡ Quick Sort', emoji:'⚡', explain:'Pick a "pivot". Put all smaller numbers to its left, all bigger to its right. Now recursively sort left and right parts. Pivot is in its final position!', code:'def quick_sort(arr, lo, hi):\n  if lo < hi:\n    p = partition(arr, lo, hi)\n    quick_sort(arr, lo, p-1)\n    quick_sort(arr, p+1, hi)' }
+};
+
+function generateArray() {
+  const n = parseInt(document.getElementById('sortSize').value);
+  sortArr = Array.from({length:n}, () => Math.floor(Math.random()*90)+10);
+  sortAnimating = false; sortPaused = false;
+  if(sortTimeout) clearTimeout(sortTimeout);
+  document.getElementById('sortPlayBtn').textContent = '▶ Play';
+  document.getElementById('sortComps').textContent = '0';
+  document.getElementById('sortSwaps').textContent = '0';
+  document.getElementById('sortStatus').textContent = 'Ready';
+  document.getElementById('sortInfo').textContent = 'Press ▶ Play to start sorting!';
+  renderBars(sortArr, []);
+  updateAlgoExplainer();
+}
+
+function renderBars(arr, highlights) {
+  const canvas = document.getElementById('sortCanvas');
+  canvas.innerHTML = '';
+  const max = Math.max(...arr);
+  arr.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'sort-bar';
+    const h = Math.max(8, (v/max)*170);
+    bar.style.height = h+'px';
+    const color = highlights[i] || COLORS.default;
+    bar.style.background = color;
+    if(arr.length <= 35) {
+      const lbl = document.createElement('div');
+      lbl.className = 'sort-bar-label';
+      lbl.textContent = v;
+      bar.appendChild(lbl);
+    }
+    canvas.appendChild(bar);
+  });
+}
+
+function updateAlgoExplainer() {
+  const algo = document.getElementById('sortAlgo').value;
+  const e = ALGO_EXPLAINERS[algo];
+  document.getElementById('algoExplain').innerHTML = `
+    <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;">
+      <div style="font-size:40px;">${e.emoji}</div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-family:'Caveat Brush',cursive;font-size:19px;color:var(--pencil-orange);margin-bottom:6px;">${e.title}</div>
+        <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:var(--ink-light);line-height:1.6;">${e.explain}</div>
+      </div>
+    </div>
+    <div class="code-box" style="margin-top:10px;"><pre>${e.code}</pre></div>
+  `;
+}
+
+document.getElementById('sortAlgo').addEventListener('change', () => { generateArray(); updateAlgoExplainer(); });
+document.getElementById('sortSize').addEventListener('change', generateArray);
+
+async function sortControl() {
+  if(sortAnimating) {
+    sortPaused = !sortPaused;
+    document.getElementById('sortPlayBtn').textContent = sortPaused ? '▶ Resume' : '⏸ Pause';
+    return;
+  }
+  sortAnimating = true;
+  sortPaused = false;
+  sortComps = 0; sortSwaps = 0;
+  document.getElementById('sortPlayBtn').textContent = '⏸ Pause';
+  document.getElementById('sortStatus').textContent = 'Sorting...';
+  const algo = document.getElementById('sortAlgo').value;
+  const arr = [...sortArr];
+  if(algo==='bubble') await bubbleSort(arr);
+  else if(algo==='selection') await selectionSort(arr);
+  else if(algo==='insertion') await insertionSort(arr);
+  else if(algo==='merge') await mergeSortViz(arr);
+  else if(algo==='quick') await quickSortViz(arr, 0, arr.length-1);
+  renderBars(arr, Array(arr.length).fill(COLORS.sorted));
+  document.getElementById('sortStatus').textContent = '✅ Done!';
+  document.getElementById('sortInfo').textContent = '🎉 Array is sorted! Press 🔀 New for a fresh one.';
+  document.getElementById('sortPlayBtn').textContent = '▶ Play';
+  sortArr = arr; sortAnimating = false;
+}
+
+function getDelay() { return Math.max(10, 200 - parseInt(document.getElementById('sortSpeed').value)*18); }
+
+async function waitIfPaused() {
+  while(sortPaused) await new Promise(r=>setTimeout(r,100));
+}
+
+async function bubbleSort(arr) {
+  const n=arr.length;
+  for(let i=0;i<n;i++){
+    for(let j=0;j<n-i-1;j++){
+      sortComps++;
+      document.getElementById('sortComps').textContent=sortComps;
+      let h=Array(n).fill(COLORS.default);
+      for(let k=n-i;k<n;k++) h[k]=COLORS.sorted;
+      h[j]=COLORS.compare; h[j+1]=COLORS.compare;
+      renderBars(arr,h);
+      document.getElementById('sortInfo').textContent=`Comparing arr[${j}]=${arr[j]} with arr[${j+1}]=${arr[j+1]}${arr[j]>arr[j+1]?' → Swapping!':''}`;
+      await new Promise(r=>setTimeout(r,getDelay()));
+      await waitIfPaused();
+      if(arr[j]>arr[j+1]){
+        [arr[j],arr[j+1]]=[arr[j+1],arr[j]]; sortSwaps++;
+        document.getElementById('sortSwaps').textContent=sortSwaps;
+      }
+    }
+  }
+}
+
+async function selectionSort(arr) {
+  const n=arr.length;
+  for(let i=0;i<n;i++){
+    let minIdx=i;
+    for(let j=i+1;j<n;j++){
+      sortComps++;
+      document.getElementById('sortComps').textContent=sortComps;
+      let h=Array(n).fill(COLORS.default);
+      for(let k=0;k<i;k++) h[k]=COLORS.sorted;
+      h[i]=COLORS.selected; h[minIdx]=COLORS.swap; h[j]=COLORS.compare;
+      renderBars(arr,h);
+      document.getElementById('sortInfo').textContent=`Finding min in range [${i}..${n-1}]. Current min: arr[${minIdx}]=${arr[minIdx]}`;
+      await new Promise(r=>setTimeout(r,getDelay()));
+      await waitIfPaused();
+      if(arr[j]<arr[minIdx]) minIdx=j;
+    }
+    if(minIdx!==i){[arr[i],arr[minIdx]]=[arr[minIdx],arr[i]];sortSwaps++;document.getElementById('sortSwaps').textContent=sortSwaps;}
+  }
+}
+
+async function insertionSort(arr) {
+  const n=arr.length;
+  for(let i=1;i<n;i++){
+    let key=arr[i],j=i-1;
+    let h=Array(n).fill(COLORS.default);
+    h[i]=COLORS.compare;
+    renderBars(arr,h); 
+    document.getElementById('sortInfo').textContent=`Inserting ${key} into sorted portion [0..${i-1}]`;
+    await new Promise(r=>setTimeout(r,getDelay())); await waitIfPaused();
+    while(j>=0&&arr[j]>key){
+      sortComps++;document.getElementById('sortComps').textContent=sortComps;
+      arr[j+1]=arr[j];sortSwaps++;document.getElementById('sortSwaps').textContent=sortSwaps;
+      let h2=Array(n).fill(COLORS.default);
+      h2[j]=COLORS.swap;h2[j+1]=COLORS.compare;
+      renderBars(arr,h2);
+      await new Promise(r=>setTimeout(r,getDelay())); await waitIfPaused();
+      j--;
+    }
+    arr[j+1]=key;
+  }
+}
+
+async function mergeSortViz(arr, lo=0, hi=arr.length-1) {
+  if(lo>=hi) return;
+  const mid=Math.floor((lo+hi)/2);
+  await mergeSortViz(arr,lo,mid);
+  await mergeSortViz(arr,mid+1,hi);
+  await merge(arr,lo,mid,hi);
+}
+
+async function merge(arr,lo,mid,hi) {
+  const left=arr.slice(lo,mid+1), right=arr.slice(mid+1,hi+1);
+  let i=0,j=0,k=lo;
+  while(i<left.length&&j<right.length){
+    sortComps++;document.getElementById('sortComps').textContent=sortComps;
+    let h=Array(arr.length).fill(COLORS.default);
+    for(let x=lo;x<=hi;x++) h[x]=COLORS.compare;
+    h[k]=COLORS.sorted;
+    renderBars(arr,h);
+    document.getElementById('sortInfo').textContent=`Merging [${lo}..${mid}] and [${mid+1}..${hi}]`;
+    await new Promise(r=>setTimeout(r,getDelay())); await waitIfPaused();
+    if(left[i]<=right[j]) arr[k++]=left[i++];
+    else {arr[k++]=right[j++];sortSwaps++;document.getElementById('sortSwaps').textContent=sortSwaps;}
+  }
+  while(i<left.length) arr[k++]=left[i++];
+  while(j<right.length) arr[k++]=right[j++];
+}
+
+async function quickSortViz(arr,lo,hi) {
+  if(lo>=hi) return;
+  const p=await partition(arr,lo,hi);
+  await quickSortViz(arr,lo,p-1);
+  await quickSortViz(arr,p+1,hi);
+}
+
+async function partition(arr,lo,hi) {
+  const pivot=arr[hi];
+  let i=lo-1;
+  for(let j=lo;j<hi;j++){
+    sortComps++;document.getElementById('sortComps').textContent=sortComps;
+    let h=Array(arr.length).fill(COLORS.default);
+    h[hi]=COLORS.pivot; h[j]=COLORS.compare; if(i>=0)h[i]=COLORS.selected;
+    renderBars(arr,h);
+    document.getElementById('sortInfo').textContent=`Pivot=${pivot}. Comparing arr[${j}]=${arr[j]} with pivot`;
+    await new Promise(r=>setTimeout(r,getDelay())); await waitIfPaused();
+    if(arr[j]<=pivot){i++;[arr[i],arr[j]]=[arr[j],arr[i]];sortSwaps++;document.getElementById('sortSwaps').textContent=sortSwaps;}
+  }
+  [arr[i+1],arr[hi]]=[arr[hi],arr[i+1]];
+  return i+1;
+}
+
+// ================================================================
+//  BINARY SEARCH VISUALIZER
+// ================================================================
+const BS_ARR = [2,5,8,12,16,23,38,42,49,55,60,67,72,81,88,94];
+let bsState = null;
+
+function renderBSArray(lo=-1,hi=-1,mid=-1,found=-1) {
+  const container = document.getElementById('bsArray');
+  container.innerHTML = '';
+  BS_ARR.forEach((v,i)=>{
+    const cell = document.createElement('div');
+    cell.className = 'bs-cell';
+    cell.textContent = v;
+    if(found===i) cell.classList.add('found');
+    else if(i===mid) cell.classList.add('mid');
+    else if(i<lo||i>hi) cell.classList.add('eliminated');
+    else if(lo>=0) cell.classList.add('active-range');
+    cell.onclick=()=>{ document.getElementById('bsTarget').value=v; startBinarySearch(); };
+    container.appendChild(cell);
+  });
+}
+
+function startBinarySearch() {
+  const target = parseInt(document.getElementById('bsTarget').value);
+  if(isNaN(target)) { document.getElementById('bsLog').textContent='Enter a number first!'; return; }
+  bsState = {lo:0, hi:BS_ARR.length-1, target, done:false, step:0};
+  renderBSArray(0, BS_ARR.length-1);
+  document.getElementById('bsLog').textContent=`🔎 Searching for ${target} in array of ${BS_ARR.length} numbers. Left=${0}, Right=${BS_ARR.length-1}`;
+  updateBSPointers(0, BS_ARR.length-1, -1);
+}
+
+function bsStep() {
+  if(!bsState||bsState.done){document.getElementById('bsLog').textContent='Enter a number and press Search first!';return;}
+  const {lo,hi,target} = bsState;
+  if(lo>hi){
+    bsState.done=true;
+    renderBSArray();
+    document.getElementById('bsLog').textContent=`❌ ${target} not found in the array! Search space exhausted.`;
+    updateBSPointers(-1,-1,-1); return;
+  }
+  const mid = Math.floor((lo+hi)/2);
+  bsState.step++;
+  renderBSArray(lo,hi,mid,-1);
+  updateBSPointers(lo,hi,mid);
+  if(BS_ARR[mid]===target){
+    bsState.done=true;
+    renderBSArray(-1,-1,-1,mid);
+    document.getElementById('bsLog').textContent=`✅ Found ${target} at index ${mid}! Took ${bsState.step} step${bsState.step>1?'s':''}. Compare this to linear search: up to ${BS_ARR.length} steps!`;
+  } else if(BS_ARR[mid]<target){
+    document.getElementById('bsLog').textContent=`Step ${bsState.step}: arr[${mid}]=${BS_ARR[mid]} < ${target} → Target is in RIGHT half. New range: [${mid+1}, ${hi}]`;
+    bsState.lo=mid+1;
+  } else {
+    document.getElementById('bsLog').textContent=`Step ${bsState.step}: arr[${mid}]=${BS_ARR[mid]} > ${target} → Target is in LEFT half. New range: [${lo}, ${mid-1}]`;
+    bsState.hi=mid-1;
+  }
+}
+
+function updateBSPointers(lo,hi,mid){
+  const container=document.getElementById('bsPointers');
+  container.innerHTML='';
+  if(lo>=0){
+    [{label:'L='+lo,color:'var(--pencil-blue)'},{label:'R='+hi,color:'var(--pencil-red)'},{label:'M='+mid,color:'var(--pencil-green)'}].forEach(p=>{
+      const s=document.createElement('div');
+      s.className='bs-ptr';
+      s.style.background=p.color+'20';s.style.color=p.color;s.style.border='2px solid '+p.color;
+      s.textContent=p.label; container.appendChild(s);
+    });
+  }
+}
+
+function resetBS(){bsState=null;renderBSArray();document.getElementById('bsLog').textContent='Click any number in the array or enter one above!';document.getElementById('bsPointers').innerHTML='';}
+
+// ================================================================
+//  TREE TRAVERSAL VISUALIZER
+// ================================================================
+const TREE_DATA = {
+  val:50,left:{val:25,left:{val:12,left:null,right:null},right:{val:37,left:null,right:null}},
+  right:{val:75,left:{val:62,left:null,right:null},right:{val:88,left:null,right:null}}
+};
+
+const TREE_NODES=[
+  {id:0,val:50,x:280,y:30,parent:-1},
+  {id:1,val:25,x:140,y:100,parent:0},
+  {id:2,val:75,x:420,y:100,parent:0},
+  {id:3,val:12,x:70,y:170,parent:1},
+  {id:4,val:37,x:210,y:170,parent:1},
+  {id:5,val:62,x:350,y:170,parent:2},
+  {id:6,val:88,x:490,y:170,parent:2}
+];
+const TREE_EDGES=[[0,1],[0,2],[1,3],[1,4],[2,5],[2,6]];
+
+let treeOrder=[], treeIdx=0, treeAnimating=false;
+
+function drawTree(highlighted={}) {
+  const svg=document.getElementById('treeSvg');
+  svg.innerHTML='';
+  TREE_EDGES.forEach(([a,b])=>{
+    const na=TREE_NODES[a],nb=TREE_NODES[b];
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',na.x);line.setAttribute('y1',na.y+20);
+    line.setAttribute('x2',nb.x);line.setAttribute('y2',nb.y-20);
+    line.setAttribute('stroke','#c8bfaa');line.setAttribute('stroke-width','2.5');
+    svg.appendChild(line);
+  });
+  TREE_NODES.forEach(n=>{
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    const state=highlighted[n.id]||'default';
+    const colors={default:['#f5edd8','#c8bfaa','#4a3520'],active:['#e17055','#e17055','white'],visited:['#00b894','#00b894','white'],current:['#6c5ce7','#6c5ce7','white'],queued:['#0984e3','#0984e3','white']};
+    const c=colors[state]||colors.default;
+    circle.setAttribute('cx',n.x);circle.setAttribute('cy',n.y);circle.setAttribute('r','20');
+    circle.setAttribute('fill',c[0]);circle.setAttribute('stroke',c[1]);circle.setAttribute('stroke-width','2.5');
+    const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x',n.x);text.setAttribute('y',n.y+6);text.setAttribute('text-anchor','middle');
+    text.setAttribute('fill',c[2]);text.setAttribute('font-family','Caveat Brush, cursive');text.setAttribute('font-size','16');
+    text.textContent=n.val;
+    g.appendChild(circle);g.appendChild(text);svg.appendChild(g);
+  });
+}
+
+function getTraversalOrder(type) {
+  const order=[];
+  function inorder(id){if(id<0||id>=7)return;const n=TREE_NODES[id];if(n.val===12||n.val===37||n.val===62||n.val===88){order.push(id);return;}
+    const leftId=TREE_NODES.findIndex(x=>x.parent===id&&x.x<n.x);
+    const rightId=TREE_NODES.findIndex(x=>x.parent===id&&x.x>n.x);
+    if(type==='inorder'){inorderById(leftId);order.push(id);inorderById(rightId);}
+    else if(type==='preorder'){order.push(id);inorderById(leftId);inorderById(rightId);}
+    else if(type==='postorder'){inorderById(leftId);inorderById(rightId);order.push(id);}
+  }
+  function inorderById(id){
+    if(id<0)return;
+    const n=TREE_NODES[id];
+    const leftId=TREE_NODES.findIndex(x=>x.parent===id&&x.x<n.x);
+    const rightId=TREE_NODES.findIndex(x=>x.parent===id&&x.x>n.x);
+    if(type==='inorder'){inorderById(leftId);order.push(id);inorderById(rightId);}
+    else if(type==='preorder'){order.push(id);inorderById(leftId);inorderById(rightId);}
+    else if(type==='postorder'){inorderById(leftId);inorderById(rightId);order.push(id);}
+  }
+  if(type==='levelorder'){
+    const q=[0];while(q.length){const id=q.shift();order.push(id);
+      const n=TREE_NODES[id];
+      const children=TREE_NODES.filter(x=>x.parent===id).sort((a,b)=>a.x-b.x);
+      children.forEach(c=>q.push(c.id));
+    }
+  } else inorderById(0);
+  return order;
+}
+
+function startTraversal() {
+  const type=document.getElementById('traversalType').value;
+  treeOrder=getTraversalOrder(type);
+  treeIdx=0;
+  document.getElementById('treeVisitOrder').innerHTML='';
+  const msgs={inorder:'Inorder: Left → Root → Right. For BST, this gives SORTED output!',preorder:'Preorder: Root first! Good for copying or printing the tree structure.',postorder:'Postorder: Children before parent. Good for deleting or evaluating expressions.',levelorder:'Level Order (BFS): Level by level, using a Queue. Finds shortest path in trees!'};
+  document.getElementById('treeLog').textContent=msgs[type]+' Press ⏭ Step to walk through it!';
+  drawTree({});
+}
+
+function treeStep() {
+  if(!treeOrder.length){document.getElementById('treeLog').textContent='Press ▶ Traverse first to choose a traversal type!';return;}
+  if(treeIdx>=treeOrder.length){document.getElementById('treeLog').textContent='✅ Traversal complete! All nodes visited.';return;}
+  const nodeId=treeOrder[treeIdx];
+  const highlighted={};
+  for(let i=0;i<treeIdx;i++) highlighted[treeOrder[i]]='visited';
+  highlighted[nodeId]='current';
+  drawTree(highlighted);
+  const visitDiv=document.getElementById('treeVisitOrder');
+  const badge=document.createElement('div');
+  badge.style.cssText='font-family:Caveat Brush,cursive;font-size:16px;padding:4px 12px;border-radius:8px;background:var(--pencil-purple);color:white;animation:fadeUp .3s ease;';
+  badge.textContent=TREE_NODES[nodeId].val;
+  visitDiv.appendChild(badge);
+  document.getElementById('treeLog').textContent=`Visiting node ${TREE_NODES[nodeId].val} (step ${treeIdx+1}/${treeOrder.length})`;
+  treeIdx++;
+}
+
+function resetTree(){treeOrder=[];treeIdx=0;drawTree({});document.getElementById('treeVisitOrder').innerHTML='';document.getElementById('treeLog').textContent='Choose a traversal and press ▶ Traverse!';}
+
+// ================================================================
+//  GRAPH VISUALIZER
+// ================================================================
+const GRAPH_NODES=[
+  {id:0,label:'A',x:280,y:40},{id:1,label:'B',x:120,y:120},{id:2,label:'C',x:440,y:120},
+  {id:3,label:'D',x:60,y:220},{id:4,label:'E',x:200,y:220},{id:5,label:'F',x:360,y:220},
+  {id:6,label:'G',x:500,y:220}
+];
+const GRAPH_ADJ={0:[1,2],1:[0,3,4],2:[0,5,6],3:[1],4:[1,5],5:[2,4],6:[2]};
+let graphState={visited:[],queue:[],current:-1,order:[],done:false,started:false};
+
+function drawGraph(state) {
+  const canvas=document.getElementById('graphCanvas');
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // Edges
+  Object.entries(GRAPH_ADJ).forEach(([from,tos])=>{
+    tos.forEach(to=>{
+      if(to>parseInt(from)){
+        const a=GRAPH_NODES[from],b=GRAPH_NODES[to];
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle='#c8bfaa';ctx.lineWidth=2;ctx.stroke();
+      }
+    });
+  });
+  // Nodes
+  GRAPH_NODES.forEach(n=>{
+    let fill='#f5edd8',stroke='#c8bfaa',textColor='#4a3520';
+    if(n.id===0&&!state.started){fill='#c8edca';stroke='#00b894';textColor='white';}
+    if(state.visited.includes(n.id)&&n.id!==state.current){fill='#ddd';stroke='#aaa';textColor='#888';}
+    if(state.queue.includes(n.id)){fill='rgba(9,132,227,0.2)';stroke='#0984e3';textColor='#0984e3';}
+    if(n.id===state.current){fill='#e17055';stroke='#d63031';textColor='white';}
+    if(n.id===0){fill='#c8edca';stroke='#00b894';textColor='#00a37a';}
+    if(state.visited.includes(n.id)&&n.id!==state.current){fill='#ddd';stroke='#bbb';textColor='#999';}
+    if(state.queue.includes(n.id)&&n.id!==state.current){fill='rgba(9,132,227,0.2)';stroke='#0984e3';textColor='#0552a0';}
+    if(n.id===state.current){fill='#e17055';stroke='#d63031';textColor='white';}
+    ctx.beginPath();ctx.arc(n.x,n.y,22,0,Math.PI*2);
+    ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=2.5;ctx.stroke();
+    ctx.fillStyle=textColor;ctx.font='bold 15px Caveat Brush, cursive';
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n.label,n.x,n.y);
+  });
+}
+
+function startGraph() {
+  const algo=document.getElementById('graphAlgo').value;
+  if(algo==='bfs') graphState={visited:[0],queue:[0],current:0,order:['A'],done:false,started:true,algo:'bfs',frontier:[...GRAPH_ADJ[0]]};
+  else graphState={visited:[0],stack:[0],current:0,order:['A'],done:false,started:true,algo:'dfs',path:[0]};
+  drawGraph(graphState);
+  document.getElementById('graphLog').textContent=`Starting ${algo.toUpperCase()} from node A. Press ⏭ Step to explore!`;
+  document.getElementById('graphOrder').textContent='A';
+}
+
+function graphStep() {
+  if(!graphState.started){document.getElementById('graphLog').textContent='Press ▶ Start first!';return;}
+  if(graphState.done){document.getElementById('graphLog').textContent=`✅ ${graphState.algo.toUpperCase()} complete! All reachable nodes visited.`;return;}
+  const algo=graphState.algo;
+  if(algo==='bfs'){
+    if(!graphState.frontier||graphState.frontier.length===0){
+      graphState.done=true;drawGraph({...graphState,current:-1});
+      document.getElementById('graphLog').textContent='✅ BFS complete! All nodes visited level by level.';return;
+    }
+    const next=graphState.frontier.shift();
+    if(graphState.visited.includes(next)){graphStep();return;}
+    graphState.visited.push(next);
+    graphState.current=next;
+    const newNeighbors=GRAPH_ADJ[next].filter(x=>!graphState.visited.includes(x)&&!graphState.frontier.includes(x));
+    graphState.frontier.push(...newNeighbors);
+    graphState.order.push(GRAPH_NODES[next].label);
+    graphState.queue=[...graphState.frontier];
+    drawGraph(graphState);
+    document.getElementById('graphLog').textContent=`BFS: Visiting ${GRAPH_NODES[next].label}. Queue (to visit next): [${graphState.frontier.map(x=>GRAPH_NODES[x].label).join(', ')||'empty'}]`;
+  } else {
+    const stack=graphState.path;
+    while(stack.length){
+      const top=stack[stack.length-1];
+      const unvisited=GRAPH_ADJ[top].find(x=>!graphState.visited.includes(x));
+      if(unvisited!==undefined){
+        graphState.visited.push(unvisited);graphState.current=unvisited;
+        stack.push(unvisited);graphState.order.push(GRAPH_NODES[unvisited].label);
+        drawGraph(graphState);
+        document.getElementById('graphLog').textContent=`DFS: Going DEEP → visiting ${GRAPH_NODES[unvisited].label}. Stack depth: ${stack.length}`;
+        document.getElementById('graphOrder').textContent=graphState.order.join(' → ');
+        return;
+      } else {stack.pop();}
+    }
+    graphState.done=true;drawGraph({...graphState,current:-1});
+    document.getElementById('graphLog').textContent='✅ DFS complete! Explored as deep as possible before backtracking.';
+  }
+  document.getElementById('graphOrder').textContent=graphState.order.join(' → ');
+}
+
+function resetGraph(){graphState={visited:[],queue:[],current:-1,order:[],done:false,started:false};drawGraph(graphState);document.getElementById('graphLog').textContent='Press ▶ Start to begin graph traversal!';document.getElementById('graphOrder').textContent='—';}
+
+// ================================================================
+//  Q&A DATA
+// ================================================================
+const QA_DATA = [
+  // SORTING
+  {q:"What is the difference between Bubble Sort and Quick Sort?", diff:"easy", tags:["sorting"],
+   a:"<b>Bubble Sort</b> compares adjacent elements and swaps them repeatedly. Every pass moves the largest element to its correct position. It's simple but slow — O(n²) always.<br><br><b>Quick Sort</b> picks a 'pivot' element, puts all smaller numbers to its left and larger to its right, then recursively sorts both sides. In practice it's much faster — O(n log n) average.<br><br>🍕 <b>Analogy:</b> Bubble Sort is like shuffling a deck one card at a time. Quick Sort is like a librarian who picks a book, puts everything alphabetically before/after it, then sorts each pile."},
+
+  {q:"When should I use Merge Sort vs Quick Sort?", diff:"medium", tags:["sorting"],
+   a:"<b>Use Merge Sort when:</b><ul style='margin:8px 0 8px 20px'><li>You need <span class='highlight'>guaranteed O(n log n)</span> (Quick Sort's worst case is O(n²))</li><li>Sorting a <span class='highlight'>Linked List</span> (Merge Sort works better; Quick Sort needs random access)</li><li>You need a <span class='highlight'>stable sort</span> (equal elements maintain original order)</li></ul><b>Use Quick Sort when:</b><ul style='margin:8px 0 8px 20px'><li>Sorting an <span class='highlight'>array in-place</span> (less memory — O(log n) vs O(n))</li><li>Cache performance matters (Quick Sort is cache-friendly)</li><li>Average case speed is priority</li></ul>💡 In practice, most standard libraries use a hybrid (TimSort or IntroSort)."},
+
+  {q:"What does 'stable sort' mean?", diff:"easy", tags:["sorting"],
+   a:"A sort is <span class='highlight'>stable</span> if elements with equal values maintain their original relative order.<br><br><b>Example:</b> You have students [Alice-B, Bob-A, Carol-B]. Sort by grade:<br>• <b>Stable:</b> [Bob-A, Alice-B, Carol-B] ← Alice still before Carol<br>• <b>Unstable:</b> [Bob-A, Carol-B, Alice-B] ← order of B's changed<br><br>🏆 Stable sorts: Merge Sort, Insertion Sort, Bubble Sort, Counting Sort<br>❌ Unstable: Quick Sort, Heap Sort, Selection Sort<br><br>Stability matters in multi-key sorting (sort by first name, then last name)."},
+
+  {q:"What is Counting Sort and when can you use it?", diff:"medium", tags:["sorting"],
+   a:"Counting Sort is a <span class='highlight'>non-comparison</span> sort that runs in O(n+k) time where k is the range of values.<br><br><b>How it works:</b> Count how many times each value appears. Then place values in order using the counts.<br><br><b>Example:</b> Array = [3,1,2,1,3,3]. Count: {1:2, 2:1, 3:3}. Output: [1,1,2,3,3,3].<br><br><b>When to use:</b> When values are <span class='highlight'>integers in a small range</span> (e.g. grades 0-100, ages 0-150). It can be faster than O(n log n) sorts in these cases!<br><br>❌ Don't use for: floating point, very large ranges, strings."},
+
+  // SEARCHING
+  {q:"Why can't Binary Search work on unsorted arrays?", diff:"easy", tags:["search"],
+   a:"Binary Search works by checking the <span class='highlight'>middle element</span> and deciding to search left or right based on whether our target is smaller or larger.<br><br>This decision ONLY makes sense if the array is sorted! If it's unsorted, the middle element tells us nothing about where our target might be.<br><br><b>Example:</b> Array = [5, 3, 9, 1, 7]. Looking for 1.<br>• Middle = 9. Is 1 < 9? Yes → look left: [5, 3] — but 1 is on the RIGHT!<br><br>So we'd get the wrong answer. 💀<br><br>✅ Always sort first, THEN binary search. (Or use a data structure that stays sorted, like a BST!)"},
+
+  {q:"What is the time complexity of Binary Search and why?", diff:"easy", tags:["search"],
+   a:"Binary Search runs in <span class='highlight'>O(log n)</span> time.<br><br><b>Why?</b> Each step, we eliminate HALF the remaining elements:<br>• Start: n elements<br>• After step 1: n/2 elements<br>• After step 2: n/4 elements<br>• After step k: n/2^k elements<br><br>We stop when n/2^k = 1, so k = log₂(n).<br><br>🔢 <b>In numbers:</b><br>• 1,000 elements → max 10 steps<br>• 1,000,000 elements → max 20 steps<br>• 1,000,000,000 elements → max 30 steps!<br><br>That's why binary search feels almost instant even on huge datasets."},
+
+  {q:"What is a Hash Map and how does it work?", diff:"easy", tags:["search"],
+   a:"A HashMap (also called Hash Table) stores <span class='highlight'>key-value pairs</span> and lets you find any value in O(1) time on average!<br><br><b>How it works:</b><br>1. You give it a key (e.g. 'name')<br>2. A <b>hash function</b> converts the key to a number (index)<br>3. The value is stored at that index in an array<br><br><b>Example:</b> phone['Alice'] = '555-1234'. Hash('Alice') → index 42. Store 555-1234 at arr[42]. To get it back: Hash('Alice') → 42 → return arr[42]. ⚡ Super fast!<br><br>🚨 <b>Collision:</b> Two keys might hash to the same index. Solved by chaining (linked list at each index) or open addressing."},
+
+  // TREES
+  {q:"What is a Binary Search Tree (BST)?", diff:"easy", tags:["tree"],
+   a:"A BST is a binary tree with ONE special rule: for every node, <span class='highlight'>left child < node < right child</span>.<br><br>This rule applies recursively to ALL descendants, not just immediate children!<br><br><b>Why this is amazing:</b><br>• Search: O(log n) — go left if smaller, right if bigger. Like binary search!<br>• Insert: O(log n) — find the right spot<br>• Inorder traversal gives SORTED output!<br><br><b>Example BST:</b><br>&nbsp;&nbsp;&nbsp;&nbsp;50<br>&nbsp;&nbsp;25&nbsp;&nbsp;75<br>12&nbsp;37&nbsp;62&nbsp;88<br><br>Look for 37: 37 < 50 → go left. 37 > 25 → go right. Found! Only 3 steps."},
+
+  {q:"What is the height of a tree and why does it matter?", diff:"easy", tags:["tree"],
+   a:"<b>Height</b> = the number of edges on the longest path from root to a leaf.<br><br>A tree with just a root has height 0. Add one level = height 1.<br><br><b>Why it matters HUGELY:</b><br>Most tree operations (search, insert, delete) take O(height) time.<br><br>• <span class='highlight'>Balanced tree</span> (height = log n): BST search = O(log n) ✅<br>• <span class='highlight'>Degenerate tree</span> (height = n): basically a linked list, search = O(n) ❌<br><br>This is why balanced BSTs (AVL, Red-Black) exist! They automatically keep the height small by rotating nodes when the tree gets unbalanced."},
+
+  {q:"What is LCA (Lowest Common Ancestor)?", diff:"medium", tags:["tree"],
+   a:"The LCA of two nodes A and B is the <span class='highlight'>deepest node that has both A and B as descendants</span>.<br><br><b>Real world analogy:</b> In a family tree, your LCA with your cousin is your shared grandparent (not great-grandparent).<br><br><b>In a BST:</b> Very elegant! If both nodes are smaller than current → go left. If both larger → go right. Otherwise → current IS the LCA!<br><br><b>In a Binary Tree (not BST):</b> Use DFS. If you find A in left subtree and B in right subtree → root is LCA. If both in same subtree → keep going.<br><br>Time: O(n) for general tree, O(log n) for balanced BST."},
+
+  {q:"Explain the difference between a full, complete, and perfect binary tree.", diff:"medium", tags:["tree"],
+   a:"These three terms confuse everyone! Let's fix that:<br><br>🌳 <b>Full Binary Tree:</b> Every node has either 0 or 2 children. No node has exactly 1 child.<br><br>🏢 <b>Complete Binary Tree:</b> All levels are fully filled EXCEPT possibly the last, which is filled from left to right. This is what a Heap uses!<br><br>⭐ <b>Perfect Binary Tree:</b> ALL internal nodes have exactly 2 children AND all leaves are at the same level. Has exactly 2^h - 1 nodes where h is height.<br><br>💡 Perfect → Complete → Full (each category includes the ones after it)."},
+
+  // GRAPHS
+  {q:"What is the difference between BFS and DFS?", diff:"easy", tags:["graph"],
+   a:"Both visit all nodes in a graph, but in different orders:<br><br>🔵 <b>BFS (Breadth First):</b><br>• Uses a <span class='highlight'>Queue</span> (FIFO)<br>• Visits all neighbors at distance 1, then distance 2, etc.<br>• Like ripples spreading in water<br>• Finds SHORTEST PATH in unweighted graphs<br><br>🟣 <b>DFS (Depth First):</b><br>• Uses a <span class='highlight'>Stack</span> (or recursion)<br>• Goes as deep as possible before backtracking<br>• Like exploring a maze — one full path before another<br>• Better for: cycle detection, topological sort, checking connectivity<br><br>🧠 <b>Memory:</b> BFS stores the entire 'frontier' (can be wide). DFS only stores the current path (can be deep but thin)."},
+
+  {q:"What is a directed vs undirected graph?", diff:"easy", tags:["graph"],
+   a:"<b>Undirected Graph:</b> Edges have NO direction. If A connects to B, then B also connects to A. Like a two-way road or friendship (if you're my friend, I'm your friend).<br><br><b>Directed Graph (Digraph):</b> Edges have direction (arrow). A→B doesn't mean B→A. Like a Twitter follow (you can follow someone without them following back) or a one-way street.<br><br><b>Directed Acyclic Graph (DAG):</b> Directed graph with NO cycles. Super important! Used for:<br>• Course prerequisites (A before B before C)<br>• Build systems (compile X before Y)<br>• Topological sort only works on DAGs"},
+
+  {q:"What is Dijkstra's algorithm and when do you use it?", diff:"medium", tags:["graph"],
+   a:"Dijkstra's finds the <span class='highlight'>shortest path</span> from a source node to ALL other nodes in a weighted graph.<br><br><b>Key idea (Greedy):</b> Always process the unvisited node with the smallest known distance next.<br><br><b>Uses a Min-Heap (Priority Queue):</b><br>1. Set dist[source] = 0, all others = infinity<br>2. Push source into heap with priority 0<br>3. Pop minimum. For each neighbor, if new path is shorter → update distance, push to heap<br>4. Repeat until heap is empty<br><br><b>Time:</b> O((V+E) log V)<br><br>⚠️ <b>Limitation:</b> Does NOT work with negative edge weights. Use Bellman-Ford for those.<br><br><b>Real use:</b> GPS navigation (Google Maps!), network routing."},
+
+  {q:"What is Topological Sort?", diff:"medium", tags:["graph"],
+   a:"Topological Sort gives a <span class='highlight'>linear ordering of nodes</span> in a DAG such that for every directed edge u→v, node u appears before v.<br><br><b>Think:</b> Course prerequisites. If you must take Math before Physics before Engineering, topo sort gives: Math → Physics → Engineering.<br><br><b>Only works on DAGs</b> (no cycles — you can't sort circular dependencies!)<br><br><b>Two approaches:</b><br>1. <b>Kahn's (BFS):</b> Find nodes with in-degree 0. Process them, reduce neighbors' in-degree. Repeat. Also detects cycles!<br>2. <b>DFS postorder:</b> DFS, push to stack when done. Reverse stack = topo order.<br><br><b>Used in:</b> npm/pip package install order, Makefile build, course scheduling."},
+
+  // DP
+  {q:"What makes a problem solvable with Dynamic Programming?", diff:"medium", tags:["dp"],
+   a:"Two conditions MUST be true:<br><br>1️⃣ <b>Optimal Substructure:</b> The optimal answer to the big problem can be built from optimal answers to smaller subproblems.<br><br>2️⃣ <b>Overlapping Subproblems:</b> The same smaller problems are solved multiple times in naive recursion. DP saves the answers to avoid re-computing.<br><br><b>🍕 Analogy:</b> You need to pick the best pizza for 10 people. Best pizza for 5 people + best pizza for other 5 people → helps find best for 10. AND the '5 people' subproblem might come up again and again.<br><br><b>Quick test:</b> Can you draw a recursion tree? Do branches repeat the same subproblems? → DP!"},
+
+  {q:"What is the Fibonacci problem and how does DP solve it?", diff:"easy", tags:["dp"],
+   a:"Fibonacci: F(n) = F(n-1) + F(n-2), with F(0)=0, F(1)=1.<br><br><b>Without DP:</b> F(5) calls F(4)+F(3). F(4) calls F(3)+F(2). F(3) is computed TWICE! F(30) needs ~2³⁰ calls. Very slow!<br><br><b>With Memoization (Top-Down DP):</b><br>Store computed results in a dictionary. Before computing, check if answer exists. F(30) → O(30) calls!<br><br><b>With Tabulation (Bottom-Up DP):</b><br>Start from F(0), F(1). Build up: F(2)=1, F(3)=2, F(4)=3... Fill a table from small to large.<br><br>Space can be optimized to O(1) by only storing last two values!"},
+
+  {q:"Explain the Knapsack problem in simple terms.", diff:"medium", tags:["dp"],
+   a:"<b>Problem:</b> You have a bag with weight limit W. There are items with different weights and values. What's the maximum value you can fit?<br><br><b>🎒 Real world:</b> Packing for a trip with weight limit. Each item has 'usefulness' and 'weight'. Maximize usefulness!<br><br><b>DP Solution:</b> Build a 2D table dp[i][w] = max value using first i items with capacity w.<br><br>For each item, decide: <span class='highlight'>include it or skip it</span>?<br>• Skip: dp[i][w] = dp[i-1][w]<br>• Include: dp[i][w] = dp[i-1][w-weight[i]] + value[i]<br>• Take the maximum!<br><br>Time: O(n×W), Space: O(n×W) or O(W) with optimization."},
+
+  // GENERAL
+  {q:"What is the difference between an algorithm and a data structure?", diff:"easy", tags:["sorting","search"],
+   a:"Great question for beginners!<br><br><b>Data Structure</b> = HOW you ORGANIZE data in memory.<br>Examples: Array, Linked List, Tree, HashMap, Stack, Queue<br>Think: a filing cabinet, a bookshelf, a phone contact list<br><br><b>Algorithm</b> = STEP-BY-STEP INSTRUCTIONS to solve a problem.<br>Examples: Binary Search, Merge Sort, DFS, Dijkstra's<br>Think: a recipe, a GPS route, a method for finding something<br><br>They work TOGETHER:<br>• Binary Search ALGORITHM works on a sorted ARRAY DATA STRUCTURE<br>• Dijkstra's ALGORITHM uses a HEAP DATA STRUCTURE<br><br>Good programmers choose the right data structure for the right algorithm!"},
+
+  {q:"What is recursion and why can it cause Stack Overflow?", diff:"easy", tags:["tree","graph"],
+   a:"<b>Recursion</b> = a function that calls itself!<br><br><b>Example:</b> Factorial(5) = 5 × Factorial(4) = 5 × 4 × Factorial(3)... until Factorial(1) = 1.<br><br>Every function call is stored in a <span class='highlight'>Call Stack</span> (memory for tracking function calls).<br><br><b>Stack Overflow</b> happens when recursion is too deep — you run out of call stack memory!<br><br>Example: No base case → infinite recursion → 10,000+ calls stacked up → CRASH 💥<br><br><b>Solutions:</b><br>• Always have a base case (stopping condition)<br>• Convert to iterative with an explicit stack<br>• Use tail recursion (compiler optimization)<br>• Increase stack size (last resort)"},
+
+  {q:"What is space complexity and how is it different from time complexity?", diff:"easy", tags:["sorting","search"],
+   a:"<b>Time Complexity</b> = How many STEPS does your algorithm take? (Measured in operations)<br><br><b>Space Complexity</b> = How much MEMORY does your algorithm use? (Measured in bytes/units)<br><br><b>Example — Binary Search:</b><br>• Time: O(log n) — only log n comparisons<br>• Space: O(1) — only uses a few variables (lo, hi, mid)<br><br><b>Example — Merge Sort:</b><br>• Time: O(n log n) — fast!<br>• Space: O(n) — needs a copy of the array for merging<br><br>💡 Often there's a <span class='highlight'>time-space tradeoff</span>: use more memory to go faster (DP memoization), or use less memory but be slower (recursive vs iterative)."},
+];
+
+let activeTag = 'all';
+
+function renderQA(items) {
+  const container=document.getElementById('qaContainer');
+  container.innerHTML='';
+  if(!items.length){container.innerHTML='<div style="font-family:Patrick Hand,cursive;font-size:15px;color:var(--ink-light);text-align:center;padding:20px;">No questions match your filter. Try a different search!</div>';return;}
+  items.forEach((qa,i)=>{
+    const div=document.createElement('div');div.className='qa-item';
+    const tagHtml=qa.tags.map(t=>`<span class="qa-category" style="color:${tagColor(t)};border-color:${tagColor(t)};">${t}</span>`).join('');
+    div.innerHTML=`
+      <div class="qa-question" onclick="toggleQA(this)">
+        <div>
+          <div style="margin-bottom:5px;">${tagHtml}</div>
+          <div class="qa-q-text">${qa.q}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+          <span class="qa-diff diff-${qa.diff}">${qa.diff}</span>
+          <span class="qa-arrow">▼</span>
+        </div>
+      </div>
+      <div class="qa-answer">${qa.a}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function tagColor(t){const map={sorting:'var(--pencil-orange)',search:'var(--pencil-blue)',tree:'var(--pencil-teal)',graph:'var(--pencil-purple)',dp:'var(--pencil-red)'};return map[t]||'var(--ink-light)';}
+
+function toggleQA(header){
+  const body=header.nextElementSibling;
+  const arrow=header.querySelector('.qa-arrow');
+  const isOpen=body.classList.contains('open');
+  document.querySelectorAll('.qa-answer').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('.qa-arrow').forEach(a=>a.style.transform='');
+  if(!isOpen){body.classList.add('open');arrow.style.transform='rotate(180deg)';}
+}
+
+function filterByTag(btn,tag){
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');activeTag=tag;applyFilters();
+}
+
+function filterQA(){applyFilters();}
+
+function applyFilters(){
+  const q=document.getElementById('qaSearch').value.toLowerCase();
+  let filtered=QA_DATA;
+  if(activeTag!=='all') filtered=filtered.filter(x=>x.tags.includes(activeTag)||x.diff===activeTag);
+  if(q) filtered=filtered.filter(x=>x.q.toLowerCase().includes(q)||x.a.toLowerCase().includes(q)||x.tags.some(t=>t.includes(q)));
+  renderQA(filtered);
+}
+
+// ================================================================
+//  TOPIC EXPLAINERS
+// ================================================================
+const TOPICS=[
+  {icon:'📦',name:'Arrays',color:'var(--pencil-green)',tagline:'The foundation of everything',
+   explain:'An array is like a row of lockers in a school hallway. Each locker has a number (index) and can hold one item. You can instantly go to locker #47 without checking all others — that\'s O(1) access!',
+   keypoints:['Access by index: O(1) — instant! Like jumping to exact locker','Search: O(n) — might need to check every locker','Insert at end: O(1) — add new locker at end','Insert in middle: O(n) — must shift all lockers right','Memory: All elements stored NEXT TO EACH OTHER in memory'],
+   usecases:['Storing lists of items (students, prices, names)','Matrix operations (2D arrays)','Implementing other data structures (stacks, queues)'],
+   trick:'When you see "subarray" or "consecutive" in a problem — think Sliding Window!'},
+  {icon:'🔗',name:'Linked Lists',color:'var(--pencil-purple)',tagline:'A chain where each link knows the next',
+   explain:'A linked list is like a treasure hunt. Each clue tells you where the next clue is. You start from the beginning (head) and follow arrows to reach any element. No jumping allowed!',
+   keypoints:['No random access — must walk from head: O(n)','Insert/delete at head: O(1) — just change the first arrow','Finding middle: use fast/slow pointers (Floyd\'s)','Cycle detection: fast pointer meets slow pointer in a cycle','Doubly linked: each node knows BOTH previous and next'],
+   usecases:['Undo/redo functionality','Browser history (back/forward)','Music playlist (next/previous song)'],
+   trick:'Whenever a linked list problem mentions "cycle" or "middle" — immediately think Fast/Slow pointers!'},
+  {icon:'📚',name:'Stacks',color:'var(--pencil-orange)',tagline:'Last In, First Out — like pancakes',
+   explain:'A stack is a pile of pancakes. You can only add or remove from the TOP. The last pancake you put on is the first one you eat. This is called LIFO — Last In, First Out.',
+   keypoints:['Push (add to top): O(1)','Pop (remove from top): O(1)','Peek (look at top without removing): O(1)','Access middle: O(n) — have to pop everything above','The call stack in your computer IS a stack!'],
+   usecases:['Browser back button (stack of pages visited)','Undo in text editors','Function calls (each call added to stack)','Bracket matching { [ ( ) ] }'],
+   trick:'If a problem needs you to "remember recent items" or "match brackets" — Stack!'},
+  {icon:'🚌',name:'Queues',color:'var(--pencil-teal)',tagline:'First In, First Out — like a bus queue',
+   explain:'A queue is like waiting in line at a bus stop. The first person to arrive is the first to get on the bus. New people join at the BACK, and people leave from the FRONT. FIFO — First In, First Out.',
+   keypoints:['Enqueue (add to back): O(1)','Dequeue (remove from front): O(1)','BFS uses a Queue to explore level by level','Priority Queue: highest priority element comes out first (uses Heap)','Deque (Double-ended queue): add/remove from both ends'],
+   usecases:['Print queue (jobs printed in order received)','BFS graph traversal','Task scheduling in operating systems','Sliding window maximum (Monotonic Deque)'],
+   trick:'If a problem asks for "shortest path" or "level by level" processing — Queue + BFS!'},
+  {icon:'🌳',name:'Binary Trees',color:'var(--pencil-teal)',tagline:'Hierarchical data, parent-child relationships',
+   explain:'A tree is like a family tree or a company org chart. There\'s one CEO (root), who has direct reports (children), who have their own reports, etc. In a BINARY tree, each person can have at most 2 direct reports.',
+   keypoints:['Root: the top node (no parent)','Leaf: a node with no children','Height: longest path from root to leaf','Depth: distance from root to a specific node','Inorder traversal of BST gives sorted output!'],
+   usecases:['File system folder structure','HTML/XML document structure (DOM tree)','Decision trees in machine learning'],
+   trick:'Most tree problems: start with DFS recursion. Ask: what do I need from left child? Right child? Combine to get answer for current node.'},
+  {icon:'🏔',name:'Heaps',color:'var(--pencil-pink)',tagline:'Always know the min (or max) in O(1)',
+   explain:'A heap is like a special filing system where the most important document is ALWAYS on top. A Min-Heap keeps the smallest element on top. A Max-Heap keeps the largest. You can see the best element instantly!',
+   keypoints:['Get min/max: O(1) — always at the top!','Insert: O(log n) — add at bottom, bubble up','Extract min/max: O(log n) — remove top, rebalance','Build heap from array: O(n) — smarter than you\'d think','Internally stored as an array — compact!'],
+   usecases:['Priority queues (hospital triage — sickest patient first)','Kth largest/smallest element','Merge K sorted arrays/lists','Dijkstra\'s shortest path algorithm'],
+   trick:'Anytime a problem says "Top K" or "Kth largest" — immediately think Heap!'},
+  {icon:'🕸',name:'Graphs',color:'var(--pencil-purple)',tagline:'The most powerful and universal structure',
+   explain:'A graph is dots (nodes) connected by lines (edges). EVERYTHING is a graph: cities and roads, people and friendships, web pages and links, dependencies between tasks. Graphs are the most universal data structure!',
+   keypoints:['Directed: one-way edges (Twitter follows)','Undirected: two-way edges (Facebook friends)','Weighted: edges have costs (road distances)','Adjacency List: most common — for each node, store its neighbors','BFS for shortest path, DFS for connectivity/cycles'],
+   usecases:['Google Maps (shortest route)','Social networks (friend suggestions)','Internet (web crawlers, PageRank)','Dependency resolution (npm packages)'],
+   trick:'Graph problems in disguise: grid problems (islands, path finding), word transformations (word ladder) — recognize them!'},
+  {icon:'💡',name:'Dynamic Programming',color:'var(--pencil-red)',tagline:"Don't repeat yourself — remember your answers",
+   explain:"DP is like taking notes while solving a problem so you don't have to re-solve the same sub-problem. Imagine climbing stairs: to reach step 10, you need steps 8 and 9. But you already figured those out! Just remember them.",
+   keypoints:['Identify subproblems — what smaller problem feeds into this one?','Memoization (top-down): write recursion, add a cache/memo','Tabulation (bottom-up): fill a table from smallest to largest','Most DP problems have O(n) or O(n²) solutions','State: what info do you need to solve each subproblem?'],
+   usecases:['Navigation apps (shortest path with conditions)','Game AI (best move to make)','Text autocorrect (edit distance)','Investment optimization (portfolio)'],
+   trick:'DP keywords: "maximum/minimum", "count ways", "is it possible". See these? Think DP!'},
+  {icon:'🔍',name:'Binary Search',color:'var(--pencil-blue)',tagline:'Find anything in log n steps',
+   explain:'Binary search is how you find a word in a physical dictionary! Open to the middle. Is the word before or after? Open to the middle of that half. Repeat. Each step HALVES the search space.',
+   keypoints:['Array MUST be sorted (or have some monotonic property)','Always use: mid = left + (right-left)//2 (avoids integer overflow)','Three cases: found, too small (go right), too big (go left)','log₂(1,000,000) ≈ 20 steps — insanely fast!','Works beyond sorted arrays: any monotonic function!'],
+   usecases:['Finding items in a sorted list','Finding insertion point','"Find minimum X such that condition holds"','Peak element, rotated array search'],
+   trick:'Binary search works on the ANSWER too — binary search on the answer space when you can check "is X feasible?"'},
+  {icon:'↩️',name:'Backtracking',color:'var(--pencil-orange)',tagline:'Try everything, undo mistakes',
+   explain:'Backtracking is like solving a maze. You try a path. Hit a dead end? Go BACK and try another path. You explore all possibilities, but prune dead ends early to save time.',
+   keypoints:['Template: choose → explore → unchoose (backtrack)','Used for: subsets, permutations, combinations','Prune early: if current path can\'t lead to solution, skip it','State must be UNDONE after backtracking','Can be exponential: O(2^n) or O(n!)'],
+   usecases:['N-Queens puzzle (place queens without attacking each other)','Sudoku solver','Generate all subsets/permutations','Word search in grid'],
+   trick:'If problem says "generate ALL" or "find all valid combinations" — Backtracking!'},
+  {icon:'🌴',name:'Tries',color:'var(--pencil-green)',tagline:'Trees built from characters',
+   explain:'A Trie (pronounced "try") is a tree where each path from root spells out a word. Each node is one character. All words starting with "ca" share the same "c" and "a" nodes — super efficient for word lookups!',
+   keypoints:['Insert word: O(L) where L is word length','Search word: O(L)','Starts with (prefix search): O(L)','Space: O(total characters in all words)','Each node can have up to 26 children (one per letter)'],
+   usecases:['Autocomplete/autocorrect (Google search suggestions)','Spell checker','IP routing (longest prefix match)','Word game (Boggle, Scrabble)'],
+   trick:'Whenever you see "prefix search", "autocomplete", or "word dictionary" — Trie!'},
+  {icon:'🔢',name:'Bit Manipulation',color:'var(--pencil-blue)',tagline:'The superpower of working with 0s and 1s',
+   explain:'Every number in a computer is stored as bits (0s and 1s). Bit manipulation lets you do certain tricks extremely FAST using operations on individual bits — like XOR, AND, OR, left shift, right shift.',
+   keypoints:['XOR: a^a = 0 (number XOR itself = 0). Used to find unique number!','AND: n & (n-1) removes the last set bit — count set bits','Left shift: n << 1 = n × 2 (multiply by 2 is just shift left)','Right shift: n >> 1 = n ÷ 2 (divide by 2)','Check if power of 2: n & (n-1) == 0'],
+   usecases:['Single Number problem (XOR all numbers, duplicates cancel out)','Count number of 1-bits','Generating all subsets (bitmask)','Fast multiply/divide by powers of 2'],
+   trick:'See "single number" or "find missing/duplicate" with numbers in range? Try XOR first!'},
+];
+
+function buildTopicGrid(){
+  const grid=document.getElementById('topicGrid');
+  TOPICS.forEach((t,i)=>{
+    const div=document.createElement('div');
+    div.className='topic-card';div.style.setProperty('--t-color',t.color);
+    div.innerHTML=`<div class="topic-card-icon">${t.icon}</div><div class="topic-card-name" style="color:${t.color}">${t.name}</div><div class="topic-card-tagline">${t.tagline}</div>`;
+    div.onclick=()=>showTopicDetail(t,div);
+    grid.appendChild(div);
+  });
+}
+
+function showTopicDetail(t,clickedCard){
+  document.querySelectorAll('.topic-card').forEach(c=>c.classList.remove('active-topic'));
+  clickedCard.classList.add('active-topic');
+  const panel=document.getElementById('topicPanel');
+  panel.classList.remove('visible');
+  panel.style.borderColor=t.color;
+  panel.innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <div style="font-size:42px;">${t.icon}</div>
+      <div>
+        <div style="font-family:'Caveat Brush',cursive;font-size:28px;color:${t.color};">${t.name}</div>
+        <div style="font-family:'Patrick Hand',cursive;font-size:14px;color:var(--ink-light);">${t.tagline}</div>
+      </div>
+    </div>
+    <div style="font-family:'Patrick Hand',cursive;font-size:15px;color:var(--ink-light);line-height:1.7;margin-bottom:16px;padding:12px 16px;background:rgba(0,0,0,0.02);border-radius:8px;border-left:4px solid ${t.color};">${t.explain}</div>
+    <div style="font-family:'Caveat Brush',cursive;font-size:18px;color:${t.color};margin-bottom:8px;">📌 Key Points:</div>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+      ${t.keypoints.map(p=>`<li style="font-family:'Patrick Hand',cursive;font-size:14px;color:var(--ink-light);display:flex;gap:8px;align-items:flex-start;"><span style="color:${t.color};font-weight:700;flex-shrink:0;">▸</span>${p}</li>`).join('')}
+    </ul>
+    <div style="font-family:'Caveat Brush',cursive;font-size:18px;color:${t.color};margin-bottom:8px;">🌍 Real World Uses:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+      ${t.usecases.map(u=>`<span style="font-family:'Patrick Hand',cursive;font-size:13px;padding:4px 12px;background:${t.color}20;border:1.5px solid ${t.color};border-radius:12px;color:var(--ink-light);">${u}</span>`).join('')}
+    </div>
+    <div style="background:#fdf9f0;border:2px dashed ${t.color};border-radius:8px;padding:12px 16px;">
+      <span style="font-family:'Caveat Brush',cursive;font-size:16px;color:${t.color};">🧠 Moin's Trick: </span>
+      <span style="font-family:'Patrick Hand',cursive;font-size:14px;color:var(--ink-light);">${t.trick}</span>
+    </div>
+  `;
+  setTimeout(()=>{panel.classList.add('visible');panel.scrollIntoView({behavior:'smooth',block:'nearest'});},50);
+}
+
+// ================================================================
+//  INIT
+// ================================================================
+window.addEventListener('load',()=>{
+  generateArray();
+  renderBSArray();
+  drawTree({});
+  drawGraph(graphState);
+  renderQA(QA_DATA);
+  buildTopicGrid();
+  updateAlgoExplainer();
+});
+
+// Resize graph canvas for display
+function resizeCanvas(){
+  const canvas=document.getElementById('graphCanvas');
+  if(!canvas)return;
+  const wrapper=canvas.parentElement;
+  const w=Math.min(wrapper.offsetWidth-36,560);
+  canvas.style.width=w+'px';
+  canvas.style.height='260px';
+}
+window.addEventListener('resize',resizeCanvas);
+setTimeout(resizeCanvas,100);
+</script>
+</body>
+</html>
